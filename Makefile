@@ -33,6 +33,8 @@ MKDIR=mkdir -p
 SUDO=sudo
 CP=cp
 
+SUDO_PASSWORD = ${sudo_password}
+
 .PHONY: all clean install package test uninstall xcconfig xcodeproj
 
 all: installables
@@ -72,8 +74,8 @@ prefix_install: installables
 	$(CP) -f "$(CARTHAGE_EXECUTABLE)" "$(PREFIX)/bin/"
 
 install: installables
-	if [ ! -d "$(BINARIES_FOLDER)" ]; then $(SUDO) $(MKDIR) "$(BINARIES_FOLDER)"; fi
-	$(SUDO) $(CP) -f "$(CARTHAGE_EXECUTABLE)" "$(BINARIES_FOLDER)"
+	if [ ! -d "$(BINARIES_FOLDER)" ]; then echo $(SUDO_PASSWORD) | $(SUDO) -S $(MKDIR) "$(BINARIES_FOLDER)"; fi
+	echo $(SUDO_PASSWORD) | $(SUDO) -S $(CP) -f "$(CARTHAGE_EXECUTABLE)" "$(BINARIES_FOLDER)"
 
 uninstall:
 	$(RM) "$(BINARIES_FOLDER)/carthage"
